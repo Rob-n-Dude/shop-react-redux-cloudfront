@@ -1,4 +1,4 @@
-service: my-store-app
+service: egor-semenov-store-app
 
 frameworkVersion: "3"
 
@@ -6,6 +6,7 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: eu-west-1
+  deploymentMethod: direct
   # setup profile for AWS CLI.
   # profile: node-aws
 
@@ -19,7 +20,7 @@ plugins:
 
 custom:
   client:
-    bucketName: my-store-app
+    bucketName: egor-semenov-store-app
     distributionFolder: dist
   s3BucketName: ${self:custom.client.bucketName}
 
@@ -36,10 +37,15 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3BucketName}
-        AccessControl: PublicRead
+        # AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
           ErrorDocument: index.html
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: false
+        OwnershipControls:
+          Rules:
+            - ObjectOwnership: ObjectWriter
         # VersioningConfiguration:
         #   Status: Enabled
 
